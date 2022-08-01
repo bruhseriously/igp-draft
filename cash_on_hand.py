@@ -14,4 +14,15 @@ def cashonhand_function(forex):
             for row in reader:
                 day.append(float(row[0]))
                 cash.append(float(row[1]) * forex)
-    
+    count = 0
+    for amount in range(len(cash) - 1):
+        diff = cash[amount] - cash[amount + 1]
+        if diff > 0:
+            if file_path.exists():
+                with file_path.open(mode = 'a', encoding = 'UTF-8', errors = 'ignore') as file:
+                    text = file.write(f'\n[CASH DEFICIT] DAY: {day[amount + 1]}, AMOUNT: SGD{diff:.2f}')
+            count += 1
+    if count == 0:
+        if file_path.exists():
+            with file_path.open(mode = 'a', encoding = 'UTF-8', errors = 'ignore') as file:
+                text = file.write(f'\n[CASH SURPLUS] CASH ON EACH DAY IS HIGHER THAN THE PREVIOUS DAY')
